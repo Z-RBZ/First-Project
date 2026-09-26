@@ -14,7 +14,7 @@ import jakarta.validation.constraints.Size;
  * @Min(0)：排序不能小于 0。
  */
 public class CreateCategoryRequest {
-    @NotNull(message = "分类名称不能为空")
+    @NotBlank(message = "分类名称不能为空")
     @Size(max = 50,message = "分类名称最多 50 个字符")
     private String name;
     @Min(value = 0,message = "排序值不能小于 0")
