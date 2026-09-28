@@ -1,6 +1,6 @@
 # 个人记账应用：每周学习日志
 
-> 本文档按周记录每天的具体学习内容。周从周一开始、周日结束；每次当天学习收尾时，补充或完善当天的条目。
+> 本文档按周记录每天的具体学习内容。周一开始、周日结束；每次当天学习收尾时补充或完善当天条目。
 
 ## 第 1 周（2026-09-21 至 2026-09-27）
 
@@ -8,87 +8,108 @@
 
 #### 当天完成
 
-- 讨论并确认个人记账应用的目标、MVP 功能、明确不做的范围、技术选型、数据模型、API 和页面结构。
-- 在项目 `docs/` 下生成需求文档、设计文档、开发计划和跟写式开发引导。
-- 确认使用 React + TypeScript 作为前端，Spring Boot + Maven 作为后端，phpStudy 的 MySQL 作为本地数据库。
-- 在 IntelliJ IDEA 中使用 JDK 17 创建 Spring Boot 后端项目。
-- 创建本地 MySQL 数据库和应用账号，配置 Spring Boot 的本地数据库连接。
-- 成功运行 Spring Boot；Tomcat 在 `http://localhost:8080` 启动。
+- 确认个人记账应用的目标、MVP、技术选型、数据库模型和 API/页面设计。
+- 在 `docs/` 下生成需求、设计、开发计划和跟写式开发文档。
+- 使用 IntelliJ IDEA 与 JDK 17 创建 Spring Boot 后端，创建本地 MySQL 数据库和应用账号。
 
 #### 学到的内容
 
-- JDK 版本、Maven、Spring Boot 项目创建的基本关系。
-- 本地数据库账号应区别于 MySQL `root` 账号。
-- `application.yml`、`application-local.yml` 和示例配置文件的用途。
+- JDK、Maven、Spring Boot 的基本关系。
+- `application.yml`、`application-local.yml` 与示例配置文件的作用。
 
 #### 当天检查结果
 
-- 后端启动日志显示 Tomcat 已在 8080 端口启动。
-- JPA 已初始化，说明后端能够连接数据库。
+- Tomcat 在 8080 端口启动，JPA 已初始化并能连接数据库。
 
 #### 未完成与下次继续点
 
-- 创建由 Flyway 管理的数据库迁移脚本，并建立记账应用所需表结构。
+- 用 Flyway 创建数据库迁移脚本与业务表。
 
 ### 2026-09-22（周二）
 
 #### 当天完成
 
-- 理解 `http://localhost:8080/` 的 Whitelabel 404：后端已启动，但目前没有为根路径 `/` 编写接口，因此不是启动失败。
-- 在 `src/main/resources/db/migration/` 创建 `V1__create_tables.sql`。
-- 编写并注释四张表的创建 SQL：`categories`、`transactions`、`monthly_budgets`、`category_budgets`。
-- 重启后端，让 Flyway 自动执行 V1 迁移；确认 MySQL 中已有四张业务表和 `flyway_schema_history` 表。
-- 学习 Java 包与文件夹的关系，创建 `com.example.finance.category.entity` 包。
-- 创建 `CategoryType` 枚举，定义 `INCOME` 和 `EXPENSE`。
-- 开始创建 `Category` 实体，理解 `@Entity`、`@Table`、`@Id`、`@GeneratedValue`、`@Enumerated(EnumType.STRING)` 与 `@Column` 的基本作用。
+- 创建 `V1__create_tables.sql`，建立分类、收支记录、月预算、分类预算四张业务表。
+- 创建 `CategoryType` 枚举和 `Category` 实体的字段映射。
 
 #### 学到的内容
 
-- Flyway 的迁移文件命名规则：`V1__create_tables.sql`；迁移成功后不能继续随意改动该版本文件。
-- `DECIMAL(12, 2)` 适合保存金额，避免使用 `FLOAT`。
-- 数据库外键、唯一约束、索引和默认值的作用。
-- Java 的 package 是代码分组目录；`entity` 用于放数据库表对应的实体类。
-- Java 枚举可限制分类类型；使用 `EnumType.STRING` 可在数据库中保存清晰的 `INCOME`、`EXPENSE` 文本。
-- JPA 通常会根据 Java 字段名推断列名；字段名与数据库列名不同时，使用 `@Column(name = "...")` 指定映射。
+- Flyway 迁移命名与“已执行迁移不随意修改”的规则。
+- `@Entity`、`@Table`、`@Id`、`@GeneratedValue`、`@Enumerated` 和 `@Column` 的作用。
 
 #### 当天检查结果
 
-- Flyway 迁移已成功执行，数据库共出现五张表。
-- `CategoryType.java` 和 `Category.java` 已创建；`Category` 目前处于字段映射的学习阶段。
+- Flyway 已执行，数据库中存在四张业务表和 `flyway_schema_history`。
 
 #### 未完成与下次继续点
 
-- 补全并复查 `Category` 实体类：构造方法、getter 和符合业务规则的修改方法。
-- 运行后端，验证 JPA 映射与数据库表结构一致。
-- 创建 `CategoryRepository`，再逐步实现分类查询和新增 API。
+- 补全分类实体方法，创建 Repository。
 
 ### 2026-09-23（周三）
 
 #### 当天完成
 
-- 补全 `Category` 实体的构造方法、getter、名称/状态/排序修改方法，并使 id 使用 `Long`、新分类默认启用。
-- 创建 `CategoryRepository`，理解 `JpaRepository<Category, Long>` 为分类数据提供基础读写能力。
-- 运行后端时出现 `Not a managed type: interface jdk.jfr.Category`；确认是 IDE 自动导入了错误的同名类，将 import 改为项目自己的 `Category` 实体后启动成功。
-- 启动日志显示已发现 1 个 JPA Repository，数据库、Flyway、JPA 实体和 Repository 能一起正常启动。
-- 建立更完整的分类管理 API 学习计划，明确 Entity、DTO、Repository、Service、Controller 的职责和后续七个阶段。
-- 创建 `com.example.finance.category.dto` 包及 `CreateCategoryRequest`，包含名称、类型、排序字段、基础校验注解、getter 和 setter。
-- 创建 `CategoryResponse.java` 文件，但尚未填写字段。
+- 补全 `Category` 的构造方法、getter 和受业务规则限制的修改方法。
+- 创建 `CategoryRepository`，修复同名类错误导入后应用启动成功。
+- 创建分类 DTO：`CreateCategoryRequest`、`CategoryResponse` 等基础文件。
 
 #### 学到的内容
 
-- Java 方法的基本结构、getter 的作用，以及实例方法通常不需要 `static`。
-- JPA 管理的实体类通过 `@Entity` 与数据库表建立映射。
-- Spring Boot 报错优先查看最底部的 `Caused by`；包名 `jdk.jfr.Category` 直接说明导入了错误的同名类。
-- `JpaRepository` 会自动提供 save、find、delete 等基础数据库操作。
-- DTO 用于隔离 API 输入/输出与数据库 Entity；请求 DTO 不应允许客户端传 id 或修改分类 type。
+- `JpaRepository<Category, Long>` 提供的基础数据库操作。
+- DTO 用于隔离 API 输入/输出与 Entity；实例方法通常不需要 `static`。
 
 #### 当天检查结果
 
-- 修正 `CategoryRepository` 的 import 后，日志显示 `Found 1 JPA repository interface`，应用启动成功。
-- `CategoryResponse` 文件存在但仍为空，尚未参与任何 API。
+- 日志显示已识别 1 个 JPA Repository，应用可启动。
 
 #### 未完成与下次继续点
 
-- 先补全 `CategoryResponse` 的五个字段：id、name、type、active、sortOrder。
-- 为 `CategoryResponse` 添加构造方法与 getter。
-- 复查 `CreateCategoryRequest` 的 name 校验，确保空字符串和全空格都会被拒绝。
+- 完成 DTO，并实现分类查询的 Repository、Service 和 Controller。
+
+### 2026-09-26（周五）
+
+#### 当天完成
+
+- 补全分类响应、更新和状态更新 DTO。
+- 为 `CategoryRepository` 增加排序、按类型/状态查询、重名检查方法。
+- 创建统一错误响应 `ApiError`、分类相关异常和全局异常处理基础；编写 `ApiErrorTest`。
+
+#### 学到的内容
+
+- 构造方法的作用，以及响应对象为何通过构造方法一次性赋值。
+- Maven 负责依赖管理、编译和测试；测试失败时可从“期望值/实际值”定位问题。
+
+#### 当天检查结果
+
+- `ApiErrorTest` 修正后通过；Spring 能识别 Repository 查询方法。
+
+#### 未完成与下次继续点
+
+- 实现分类查询 Service 和 Controller，让浏览器能看到真实分类数据。
+
+## 第 2 周（2026-09-28 至 2026-10-04）
+
+### 2026-09-28（周一）
+
+#### 当天完成
+
+- 创建 `CategoryService`，负责选择合适的 Repository 查询并把 `Category` 转换为 `CategoryResponse`。
+- 创建 `CategoryController`，提供 `GET /get/category`；可传 `type=EXPENSE` 等可选筛选参数。
+- 解决访问地址多写一个 `/` 导致的 404，确认正确地址为 `http://localhost:8080/get/category`。
+- 在 phpStudy MySQL 中确认已有分类数据，并补充了一套收入、支出分类测试数据。
+
+#### 学到的内容
+
+- Service 层承担业务协调和 DTO 转换，Controller 层只负责接收 HTTP 请求、调用 Service、返回 JSON。
+- `@RestController`、`@RequestMapping`、`@GetMapping`、`@RequestParam` 的职责，以及 URL 路径必须与映射完全一致。
+- 端口被占用通常表示已有 Java 进程正在运行；根路径 `/` 的 404 与接口路径错误是两个不同问题。
+
+#### 当天检查结果
+
+- Spring Boot 已在 8080 端口启动；用户已手动访问 `GET /get/category` 并确认可用。
+- 收尾执行 `mvnw.cmd test` 未完成：MySQL 当时无法连接，错误为 `Communications link failure`。该结果说明需要先启动 phpStudy MySQL，不代表编译错误或接口逻辑错误。
+
+#### 未完成与下次继续点
+
+- 先启动 phpStudy MySQL 并重新运行 `mvnw.cmd test`。
+- 随后初始化 React + TypeScript 前端，开始分类页面：先请求并显示现有分类列表。

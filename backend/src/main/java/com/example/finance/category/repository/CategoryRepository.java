@@ -2,7 +2,10 @@ package com.example.finance.category.repository;
 
 
 import com.example.finance.category.entity.Category;
+import com.example.finance.category.entity.CategoryType;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  *
@@ -21,4 +24,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  */
 public interface CategoryRepository extends JpaRepository<Category,Long> {
+
+    List<Category> findAllByOrderBySortOrderAscIdAsc();
+
+    List<Category> findByTypeOrderBySortOrderAscIdAsc(CategoryType type);
+
+    List<Category> findByActiveOrderBySortOrderAscIdAsc(boolean active);
+
+    List<Category> findByTypeAndActiveOrderBySortOrderAscIdAsc(CategoryType type,boolean active);
+
+    boolean existsByTypeAndName(CategoryType type,String name);
+
+    boolean existsByTypeAndNameAndIdNot(CategoryType type,String name,Long id);
 }
