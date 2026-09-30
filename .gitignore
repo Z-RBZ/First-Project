@@ -1,0 +1,13 @@
+# 本地密码和机器专属配置
+.env
+.env.*
+!.env.example
+**/application-local.yml
+**/application-local.yaml
+**/application-secret.yml
+**/application-secret.yaml
+
+# 构建产物和本地依赖
+**/target/
+**/node_modules/
+**/dist/
