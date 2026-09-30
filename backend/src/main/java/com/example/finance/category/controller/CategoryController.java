@@ -2,12 +2,12 @@ package com.example.finance.category.controller;
 
 
 import com.example.finance.category.dto.CategoryResponse;
+import com.example.finance.category.dto.CreateCategoryRequest;
 import com.example.finance.category.entity.CategoryType;
 import com.example.finance.category.service.CategoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,4 +28,12 @@ public class CategoryController {
             ){
         return categoryService.getCategories(type,active);
     }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CategoryResponse createCategory(
+            @Valid @RequestBody CreateCategoryRequest request
+            ){
+        return categoryService.createCategory(request);
+    };
 }

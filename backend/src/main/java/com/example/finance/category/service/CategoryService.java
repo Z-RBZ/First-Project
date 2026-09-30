@@ -1,9 +1,11 @@
 package com.example.finance.category.service;
 
 import com.example.finance.category.dto.CategoryResponse;
+import com.example.finance.category.dto.CreateCategoryRequest;
 import com.example.finance.category.entity.Category;
 import com.example.finance.category.entity.CategoryType;
 import com.example.finance.category.repository.CategoryRepository;
+import com.example.finance.common.exception.DuplicateCategoryException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,6 +46,28 @@ public class CategoryService {
                 category.getSortOrder(),
                 category.isActive()
         );
+    }
+
+    public CategoryResponse createCategory(CreateCategoryRequest request){
+        boolean categoryExist = categoryRepository.existsByTypeAndName(
+                request.getType(),
+                request.getName()
+        );
+
+        if (categoryExist){
+            throw new DuplicateCategoryException(request.getName());
+        }
+
+        Category category = new Category(
+                request.getName(),
+                request.getType()
+        );
+
+        category.setSortOrder(request.getSortOrder());
+
+        Category saveCategory = categoryRepository.save(category);
+
+        return toResponse(saveCategory);
     }
 
 }

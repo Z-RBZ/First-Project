@@ -23,4 +23,19 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(apiError);
     }
+
+    @ExceptionHandler(DuplicateCategoryException.class)
+    public ResponseEntity<ApiError> handleDuplicateCategory(
+            DuplicateCategoryException exception
+    ) {
+        ApiError apiError = new ApiError(
+                HttpStatus.CONFLICT.value(),
+                "CATEGORY_ALREADY_EXISTS",
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(apiError);
+    }
 }
