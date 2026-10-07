@@ -144,3 +144,34 @@
 
 - 在浏览器中完整手动验证分类列表、筛选、新增、重复分类提示，以及空排序值按 `0` 保存。
 - 验证后进入收入/支出记账记录功能的需求细化与数据/API 设计。
+
+## 第 3 周（2026-10-05 至 2026-10-11）
+
+### 2026-10-07（周三）
+
+#### 当天完成
+
+- 完成收支记录后端第一版：创建 `Transaction` 实体、创建请求和响应 DTO、Repository、Service、Controller，以及交易业务异常类。
+- 新增 `POST /api/transactions`，可以创建收入或支出记录；新增 `GET /api/transactions`，按交易日期和 id 倒序返回记录。
+- 交易创建时会校验金额、日期、类型、分类；并拒绝停用分类和分类类型不匹配的记录。
+- 扩展全局异常处理，统一返回字段校验错误和交易业务错误；CORS 放行 `/api/**` 供本地前端访问。
+- 定位 Maven 的 Java 版本报错：PowerShell 原来使用 Java 11，而项目要求 Java 17；已确认使用 `D:\JavaJDK` 后可切换到 Java 17。
+- 使用 Postman 验证新增、查询、金额为 0、分类类型不匹配四种场景，用户反馈全部通过。
+
+#### 学到的内容
+
+- `BigDecimal` 对应 MySQL 的 `DECIMAL(12,2)`，适合保存金额，避免 `double` 的小数精度问题。
+- `@ManyToOne` 与 `@JoinColumn` 让一笔交易关联一个分类；Service 层负责检查关联分类是否可用。
+- `@RequestBody` 接收 JSON 请求体，因此 Postman 必须使用 `Body → raw → JSON`，不能把 JSON 当作表单提交。
+- Maven 编译项目时使用的是当前终端的 `JAVA_HOME` 和 `Path`，IDE 选择 Java 17 不会自动改变 PowerShell 使用的 Java 版本。
+
+#### 当日检查结果
+
+- `java -version` 已显示 Java 17.0.18。
+- 用户反馈 Postman 的正常创建、列表查询、金额校验和类型不匹配校验全部通过。
+- 本次会话未记录 Java 17 下 `mvnw.cmd test` 的最终输出，后续可补做一次完整自动化测试。
+
+#### 未完成与下次继续点
+
+- 为收支记录首页制作金色主题视觉设计稿和尺寸标注图。
+- 设计完成后，一次性实现首页的 React 页面、列表组件、API 封装和样式，并接入 `GET /api/transactions`。
